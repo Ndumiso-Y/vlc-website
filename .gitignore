@@ -2,3 +2,8 @@ node_modules
 dist
 .env
 .DS_Store
+
+# Large video files - consider hosting externally
+*.mp4
+public/*.mp4
+src/assets/*.mp4
