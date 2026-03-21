@@ -63,7 +63,9 @@ export default function Home() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="none"
+            poster={coverUrl}
+            aria-hidden="true"
           />
           <div className="absolute inset-0 bg-white/50 dark:bg-[#0b1020]/60"></div>
         </div>

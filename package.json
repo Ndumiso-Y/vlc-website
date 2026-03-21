@@ -9,11 +9,9 @@
     "postbuild": "node -e \"fs=require('fs');fs.copyFileSync('dist/index.html','dist/404.html')\"",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
-  }
-,
+  },
   "dependencies": {
     "framer-motion": "^11.0.0",
-    "lucide-react": "^0.541.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",

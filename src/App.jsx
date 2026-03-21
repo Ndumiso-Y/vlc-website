@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 // Pages
 import Home from "./pages/Home.jsx";
@@ -32,6 +33,7 @@ export default function App() {
   return (
     // Flex column so footer always renders and sticks to bottom on short pages
     <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100 flex flex-col">
+      <ScrollToTop />
       <Navbar dark={dark} setDark={setDark} />
       <main className="flex-1">
         <Routes>

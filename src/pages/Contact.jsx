@@ -87,8 +87,12 @@ export default function Contact() {
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="relative">
+                  <div>
+                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      First Name
+                    </label>
                     <input
+                      id="firstName"
                       type="text"
                       name="firstName"
                       value={formData.firstName}
@@ -98,8 +102,12 @@ export default function Contact() {
                       required
                     />
                   </div>
-                  <div className="relative">
+                  <div>
+                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Last Name
+                    </label>
                     <input
+                      id="lastName"
                       type="text"
                       name="lastName"
                       value={formData.lastName}
@@ -111,35 +119,53 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
-                  placeholder="Email address"
-                  required
-                />
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
+                    placeholder="Email address"
+                    required
+                  />
+                </div>
 
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
-                  placeholder="Phone number"
-                  required
-                />
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
+                    placeholder="Phone number"
+                    required
+                  />
+                </div>
 
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={5}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors resize-none"
-                  placeholder="Tell us about your project..."
-                  required
-                />
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={5}
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors resize-none"
+                    placeholder="Tell us about your project..."
+                    required
+                  />
+                </div>
 
                 <button
                   type="submit"

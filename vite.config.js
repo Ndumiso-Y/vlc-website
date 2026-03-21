@@ -6,7 +6,7 @@ import { imagetools } from 'vite-imagetools'
 export default defineConfig(({ command }) => {
   const isBuild = command === 'build'
   return {
-    base: '/vlc-website/', // <-- IMPORTANT for GitHub Pages project site
+    base: '/', // Updated for cPanel deployment
     plugins: [
       react(),
       ...(isBuild

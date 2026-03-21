@@ -36,7 +36,8 @@ export default function About() {
             muted
             loop
             playsInline
-            preload="auto"
+            preload="none"
+            aria-hidden="true"
           />
           <div className="absolute inset-0 bg-gradient-to-br from-brand/80 via-accent/60 to-gold/80 dark:from-[#0b1020]/70 dark:via-brand/50 dark:to-accent/60"></div>
         </div>

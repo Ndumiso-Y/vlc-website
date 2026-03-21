@@ -140,7 +140,7 @@ export default function Services() {
     {
       title: "Demolition and Dismantling",
       icon: FaHammer,
-      description: "Ensuring all steelwork meets industry standards and project specifications through rigorous quality control and inspection processes.",
+      description: "Safe and efficient demolition and dismantling of steel structures, equipment, and industrial facilities. Our team follows strict safety protocols to ensure controlled removal with minimal disruption, while maximising material recovery and recycling where possible.",
       color: "from-brand to-gold"
     }
   ];
@@ -184,28 +184,53 @@ export default function Services() {
       {/* Tab Navigation */}
       <section className="py-8 bg-gray-50 dark:bg-[#0d1324] border-b border-gray-200 dark:border-white/10">
         <div className="container">
+          {/* Instructions for clarity */}
+          <div className="text-center mb-6">
+            <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+              Choose a category to explore our services
+            </p>
+          </div>
+          
           <div className="flex justify-center">
             <div className="bg-white dark:bg-[#0f1426] rounded-2xl p-2 shadow-lg border border-gray-200 dark:border-white/10">
               <button
                 onClick={() => setActiveTab('products')}
-                className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform ${
                   activeTab === 'products'
-                    ? 'bg-gradient-to-r from-brand to-accent text-white shadow-lg'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-brand dark:hover:text-gold'
+                    ? 'bg-gradient-to-r from-brand to-accent text-white shadow-lg scale-105 shadow-brand/30'
+                    : 'text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-[#1a2236] hover:text-white hover:bg-gradient-to-r hover:from-brand/80 hover:to-accent/80 hover:scale-102'
                 }`}
               >
-                Core Products
+                <div className="flex items-center gap-2">
+                  <FaIndustry className="text-lg" />
+                  <span>Core Products</span>
+                </div>
               </button>
               <button
                 onClick={() => setActiveTab('services')}
-                className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                className={`ml-2 px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform ${
                   activeTab === 'services'
-                    ? 'bg-gradient-to-r from-brand to-accent text-white shadow-lg'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-brand dark:hover:text-gold'
+                    ? 'bg-gradient-to-r from-brand to-accent text-white shadow-lg scale-105 shadow-brand/30'
+                    : 'text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-[#1a2236] hover:text-white hover:bg-gradient-to-r hover:from-brand/80 hover:to-accent/80 hover:scale-102'
                 }`}
               >
-                Supporting Services
+                <div className="flex items-center gap-2">
+                  <FaCogs className="text-lg" />
+                  <span>Supporting Services</span>
+                </div>
               </button>
+            </div>
+          </div>
+          
+          {/* Tab indicators */}
+          <div className="flex justify-center mt-4">
+            <div className="flex gap-2">
+              <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                activeTab === 'products' ? 'bg-brand dark:bg-gold' : 'bg-gray-300 dark:bg-gray-600'
+              }`} />
+              <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                activeTab === 'services' ? 'bg-brand dark:bg-gold' : 'bg-gray-300 dark:bg-gray-600'
+              }`} />
             </div>
           </div>
         </div>
