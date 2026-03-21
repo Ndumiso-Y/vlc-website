@@ -254,7 +254,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 32, scale: 0.92 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className="fixed bottom-28 right-4 z-50 w-[370px] max-w-[calc(100vw-2rem)] flex flex-col rounded-3xl overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.25)] border border-white/20 dark:border-white/10"
+            className="fixed bottom-24 inset-x-2 sm:inset-x-auto sm:right-4 sm:w-[370px] z-[9999] flex flex-col rounded-3xl overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/10 max-h-[calc(100dvh-7rem)]"
             role="dialog"
             aria-label="VLC Construction Chat"
           >
@@ -297,7 +297,7 @@ export default function ChatBot() {
 
             {/* Messages */}
             <div
-              className="overflow-y-auto p-4 space-y-3 max-h-[300px] bg-gray-50 dark:bg-dark-page"
+              className="overflow-y-auto p-4 space-y-3 flex-1 min-h-0 bg-gray-50 dark:bg-dark-page"
               aria-live="polite"
             >
               {messages.map((msg, i) => (
@@ -399,7 +399,7 @@ export default function ChatBot() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 12, scale: 0.9 }}
             transition={{ duration: 0.25 }}
-            className="fixed bottom-[88px] right-20 z-50 bg-white dark:bg-dark-card text-gray-800 dark:text-white text-sm font-medium px-4 py-2.5 rounded-2xl rounded-br-sm shadow-xl border border-gray-100 dark:border-white/10 whitespace-nowrap cursor-pointer"
+            className="fixed bottom-[88px] right-20 z-[9999] bg-white dark:bg-dark-card text-gray-800 dark:text-white text-sm font-medium px-4 py-2.5 rounded-2xl rounded-br-sm shadow-xl border border-gray-100 dark:border-white/10 whitespace-nowrap cursor-pointer"
             onClick={() => { setOpen(true); setShowTooltip(false); }}
           >
             💬 Need help? Ask me anything!
@@ -413,7 +413,7 @@ export default function ChatBot() {
       </AnimatePresence>
 
       {/* ── Floating button with pulse ring ── */}
-      <div className="fixed bottom-5 right-5 z-50">
+      <div className="fixed bottom-5 right-5 z-[9999]">
         {/* Pulsing ring — only visible when closed */}
         {!open && (
           <>
