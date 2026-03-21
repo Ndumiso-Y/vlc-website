@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import ChatBot from "./components/ChatBot.jsx";
 
 // Pages — lazy loaded per route to reduce initial bundle size
 const Home     = lazy(() => import("./pages/Home.jsx"));
@@ -59,6 +60,7 @@ export default function App() {
         </Suspense>
       </main>
       <Footer />
+      <ChatBot />
     </div>
   );
 }
