@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaComments, FaTimes, FaPaperPlane, FaRobot, FaUser } from 'react-icons/fa';
+import { FaComments, FaTimes, FaPaperPlane, FaHardHat, FaUser, FaChevronDown } from 'react-icons/fa';
 
 // ---------------------------------------------------------------------------
 // Knowledge base — pure static data, zero cost, runs entirely in the browser
@@ -189,42 +189,47 @@ function getAnswer(input) {
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-const WELCOME = "Hi! I'm the VLC Construction assistant. Ask me anything about our services, team, location, or how to get a quote.";
+const WELCOME = "👋 Hi! I'm the VLC Construction assistant. Ask me anything about our services, team, location, or how to get a quote.";
 
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([{ role: 'bot', content: WELCOME }]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
+  // Show tooltip bubble after 3s, dismiss on open or manual close
+  const [showTooltip, setShowTooltip] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setShowTooltip(true), 3000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
 
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 150);
+    if (open) {
+      setShowTooltip(false);
+      setTimeout(() => inputRef.current?.focus(), 150);
+    }
   }, [open]);
 
   function handleSend(e) {
     e.preventDefault();
     const text = input.trim();
     if (!text || typing) return;
-
     setMessages(prev => [...prev, { role: 'user', content: text }]);
     setInput('');
     setTyping(true);
-
-    // Simulate a brief "typing" pause so it feels natural
     setTimeout(() => {
-      const answer = getAnswer(text);
-      setMessages(prev => [...prev, { role: 'bot', content: answer }]);
+      setMessages(prev => [...prev, { role: 'bot', content: getAnswer(text) }]);
       setTyping(false);
     }, 500 + Math.random() * 400);
   }
 
-  // Suggested quick questions
   const suggestions = ['Our services', 'Get a quote', 'Contact details', 'Office location'];
 
   function pickSuggestion(s) {
@@ -236,80 +241,105 @@ export default function ChatBot() {
     }, 500);
   }
 
-  const showSuggestions = messages.length === 1; // only show on fresh open
+  const showSuggestions = messages.length === 1;
 
   return (
     <>
-      {/* Chat panel */}
+      {/* ── Chat panel ── */}
       <AnimatePresence>
         {open && (
           <motion.div
             key="chat-panel"
-            initial={{ opacity: 0, y: 20, scale: 0.96 }}
+            initial={{ opacity: 0, y: 32, scale: 0.92 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.96 }}
-            transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-4 z-50 w-[340px] max-w-[calc(100vw-2rem)] flex flex-col rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 overflow-hidden bg-white dark:bg-dark-card"
+            exit={{ opacity: 0, y: 32, scale: 0.92 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            className="fixed bottom-28 right-4 z-50 w-[370px] max-w-[calc(100vw-2rem)] flex flex-col rounded-3xl overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.25)] border border-white/20 dark:border-white/10"
             role="dialog"
             aria-label="VLC Construction Chat"
           >
-            {/* Header */}
-            <div className="flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-brand to-accent text-white flex-shrink-0">
-              <div className="p-2 rounded-full bg-white/20">
-                <FaRobot className="text-lg" aria-hidden="true" />
-              </div>
-              <div className="flex-1 leading-tight">
-                <div className="font-bold text-sm">VLC Assistant</div>
-                <div className="text-xs opacity-80 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-300 inline-block" />
-                  Always online
+            {/* Header — tall branded block */}
+            <div className="relative flex flex-col px-5 pt-5 pb-4 bg-gradient-to-br from-brand via-accent to-gold text-white overflow-hidden flex-shrink-0">
+              {/* Decorative circles */}
+              <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none" />
+              <div className="absolute top-8 -right-2 w-14 h-14 rounded-full bg-white/10 pointer-events-none" />
+              <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-black/10 pointer-events-none" />
+
+              {/* Top row */}
+              <div className="relative flex items-center gap-3 mb-3">
+                <div className="p-2.5 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg">
+                  <FaHardHat className="text-xl text-gold" aria-hidden="true" />
                 </div>
+                <div className="flex-1">
+                  <div className="font-extrabold text-base tracking-wide">VLC Construction</div>
+                  <div className="text-xs font-medium opacity-80 flex items-center gap-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
+                    </span>
+                    Assistant · Always online
+                  </div>
+                </div>
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="Close chat"
+                  className="p-2 rounded-xl hover:bg-white/20 transition-colors"
+                >
+                  <FaChevronDown aria-hidden="true" />
+                </button>
               </div>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close chat"
-                className="p-1.5 rounded-lg hover:bg-white/20 transition-colors"
-              >
-                <FaTimes aria-hidden="true" />
-              </button>
+
+              {/* Tagline */}
+              <p className="relative text-xs font-medium opacity-90 leading-relaxed">
+                Ask me about services, the team, pricing or anything VLC — I'll help you out instantly.
+              </p>
             </div>
 
             {/* Messages */}
             <div
-              className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[320px]"
+              className="overflow-y-auto p-4 space-y-3 max-h-[300px] bg-gray-50 dark:bg-dark-page"
               aria-live="polite"
             >
               {messages.map((msg, i) => (
-                <div key={i} className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                  <div className={`flex-shrink-0 p-1.5 rounded-full self-end ${
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
+                >
+                  {/* Avatar */}
+                  <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center self-end shadow ${
                     msg.role === 'user'
-                      ? 'bg-brand text-white'
-                      : 'bg-gray-100 dark:bg-white/10 text-brand dark:text-gold'
+                      ? 'bg-gradient-to-br from-brand to-accent text-white'
+                      : 'bg-gradient-to-br from-gold to-brand text-white'
                   }`}>
                     {msg.role === 'user'
-                      ? <FaUser className="text-xs" aria-hidden="true" />
-                      : <FaRobot className="text-xs" aria-hidden="true" />}
+                      ? <FaUser className="text-[10px]" aria-hidden="true" />
+                      : <FaHardHat className="text-[10px]" aria-hidden="true" />}
                   </div>
-                  <div className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm leading-relaxed whitespace-pre-line ${
+
+                  {/* Bubble */}
+                  <div className={`max-w-[78%] px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-line shadow-sm ${
                     msg.role === 'user'
-                      ? 'bg-gradient-to-br from-brand to-accent text-white rounded-tr-sm'
-                      : 'bg-gray-100 dark:bg-white/10 text-gray-800 dark:text-gray-200 rounded-tl-sm'
+                      ? 'bg-gradient-to-br from-brand to-accent text-white rounded-2xl rounded-tr-sm'
+                      : 'bg-white dark:bg-dark-card text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm border border-gray-100 dark:border-white/10'
                   }`}>
                     {msg.content}
                   </div>
-                </div>
+                </motion.div>
               ))}
 
               {/* Typing dots */}
               {typing && (
                 <div className="flex gap-2">
-                  <div className="flex-shrink-0 p-1.5 rounded-full bg-gray-100 dark:bg-white/10 text-brand dark:text-gold self-end">
-                    <FaRobot className="text-xs" aria-hidden="true" />
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gold to-brand flex items-center justify-center self-end shadow">
+                    <FaHardHat className="text-[10px] text-white" aria-hidden="true" />
                   </div>
-                  <div className="px-3 py-3 rounded-2xl rounded-tl-sm bg-gray-100 dark:bg-white/10 flex gap-1 items-center">
-                    <span className="w-1.5 h-1.5 bg-brand dark:bg-gold rounded-full animate-bounce [animation-delay:0ms]" />
-                    <span className="w-1.5 h-1.5 bg-brand dark:bg-gold rounded-full animate-bounce [animation-delay:150ms]" />
-                    <span className="w-1.5 h-1.5 bg-brand dark:bg-gold rounded-full animate-bounce [animation-delay:300ms]" />
+                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-white dark:bg-dark-card border border-gray-100 dark:border-white/10 shadow-sm flex gap-1.5 items-center">
+                    <span className="w-2 h-2 bg-brand rounded-full animate-bounce [animation-delay:0ms]" />
+                    <span className="w-2 h-2 bg-accent rounded-full animate-bounce [animation-delay:150ms]" />
+                    <span className="w-2 h-2 bg-gold rounded-full animate-bounce [animation-delay:300ms]" />
                   </div>
                 </div>
               )}
@@ -317,14 +347,14 @@ export default function ChatBot() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Quick suggestions (shown only at the start) */}
+            {/* Quick suggestions */}
             {showSuggestions && (
-              <div className="px-4 pb-2 flex flex-wrap gap-2">
+              <div className="px-4 py-2 bg-gray-50 dark:bg-dark-page border-t border-gray-100 dark:border-white/5 flex flex-wrap gap-2">
                 {suggestions.map(s => (
                   <button
                     key={s}
                     onClick={() => pickSuggestion(s)}
-                    className="px-3 py-1.5 text-xs rounded-full border border-brand dark:border-gold text-brand dark:text-gold hover:bg-brand hover:text-white dark:hover:bg-gold dark:hover:text-gray-900 transition-colors"
+                    className="px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-dark-card border border-brand/30 dark:border-gold/30 text-brand dark:text-gold hover:bg-gradient-to-r hover:from-brand hover:to-accent hover:text-white hover:border-transparent dark:hover:from-gold dark:hover:to-brand dark:hover:text-white transition-all duration-200 shadow-sm"
                   >
                     {s}
                   </button>
@@ -332,26 +362,26 @@ export default function ChatBot() {
               </div>
             )}
 
-            {/* Input */}
+            {/* Input bar */}
             <form
               onSubmit={handleSend}
-              className="flex gap-2 p-3 border-t border-gray-200 dark:border-white/10 flex-shrink-0"
+              className="flex gap-2 p-3 bg-white dark:bg-dark-card border-t border-gray-100 dark:border-white/10 flex-shrink-0"
             >
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={e => setInput(e.target.value)}
-                placeholder="Ask a question…"
+                placeholder="Type your question…"
                 disabled={typing}
-                className="flex-1 px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-white/20 bg-white dark:bg-dark-page text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand dark:focus:border-gold transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2.5 text-sm rounded-2xl border border-gray-200 dark:border-white/15 bg-gray-50 dark:bg-dark-page text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand dark:focus:border-gold focus:bg-white dark:focus:bg-dark-card transition-all disabled:opacity-50"
                 aria-label="Type your question"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || typing}
                 aria-label="Send"
-                className="p-2.5 rounded-xl bg-gradient-to-r from-brand to-accent text-white hover:shadow-lg transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-11 h-11 flex items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-accent text-white shadow-md hover:shadow-brand/40 hover:scale-105 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 <FaPaperPlane className="text-sm" aria-hidden="true" />
               </button>
@@ -360,26 +390,59 @@ export default function ChatBot() {
         )}
       </AnimatePresence>
 
-      {/* Floating toggle button */}
-      <motion.button
-        onClick={() => setOpen(o => !o)}
-        aria-label={open ? 'Close chat' : 'Open chat'}
-        aria-expanded={open}
-        className="fixed bottom-5 right-5 z-50 p-4 rounded-full bg-gradient-to-r from-brand to-accent text-white shadow-2xl hover:shadow-brand/40 hover:scale-110 transition-all duration-300"
-        whileTap={{ scale: 0.93 }}
-      >
-        <AnimatePresence mode="wait" initial={false}>
-          {open ? (
-            <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
-              <FaTimes className="text-xl" aria-hidden="true" />
-            </motion.span>
-          ) : (
-            <motion.span key="c" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
-              <FaComments className="text-xl" aria-hidden="true" />
-            </motion.span>
-          )}
-        </AnimatePresence>
-      </motion.button>
+      {/* ── Tooltip bubble ── */}
+      <AnimatePresence>
+        {showTooltip && !open && (
+          <motion.div
+            key="tooltip"
+            initial={{ opacity: 0, x: 12, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: 12, scale: 0.9 }}
+            transition={{ duration: 0.25 }}
+            className="fixed bottom-[88px] right-20 z-50 bg-white dark:bg-dark-card text-gray-800 dark:text-white text-sm font-medium px-4 py-2.5 rounded-2xl rounded-br-sm shadow-xl border border-gray-100 dark:border-white/10 whitespace-nowrap cursor-pointer"
+            onClick={() => { setOpen(true); setShowTooltip(false); }}
+          >
+            💬 Need help? Ask me anything!
+            <button
+              onClick={e => { e.stopPropagation(); setShowTooltip(false); }}
+              className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 leading-none"
+              aria-label="Dismiss"
+            >×</button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Floating button with pulse ring ── */}
+      <div className="fixed bottom-5 right-5 z-50">
+        {/* Pulsing ring — only visible when closed */}
+        {!open && (
+          <>
+            <span className="absolute inset-0 rounded-full bg-brand opacity-30 animate-ping" />
+            <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-brand to-accent opacity-20 animate-pulse" />
+          </>
+        )}
+        <motion.button
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? 'Close chat' : 'Open chat'}
+          aria-expanded={open}
+          className="relative w-16 h-16 rounded-full bg-gradient-to-br from-brand via-accent to-gold text-white shadow-2xl shadow-brand/40 flex items-center justify-center"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.93 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {open ? (
+              <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                <FaTimes className="text-2xl" aria-hidden="true" />
+              </motion.span>
+            ) : (
+              <motion.span key="c" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                <FaComments className="text-2xl" aria-hidden="true" />
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
     </>
   );
 }
