@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaComments, FaTimes, FaPaperPlane, FaHardHat, FaUser, FaChevronDown } from 'react-icons/fa';
 
@@ -243,7 +244,7 @@ export default function ChatBot() {
 
   const showSuggestions = messages.length === 1;
 
-  return (
+  return createPortal(
     <>
       {/* ── Chat panel ── */}
       <AnimatePresence>
@@ -443,6 +444,7 @@ export default function ChatBot() {
           </AnimatePresence>
         </motion.button>
       </div>
-    </>
+    </>,
+    document.body
   );
 }
