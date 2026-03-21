@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { FaComments, FaTimes, FaPaperPlane, FaHardHat, FaUser, FaChevronDown } from 'react-icons/fa';
 
 // ---------------------------------------------------------------------------
-// Knowledge base — pure static data, zero cost, runs entirely in the browser
+// Knowledge base
 // ---------------------------------------------------------------------------
 const KB = [
   {
@@ -57,7 +56,7 @@ const KB = [
   },
   {
     tags: ['quality control', 'inspection', 'quality', 'standards'],
-    answer: "We conduct rigorous quality control and inspection at every stage to ensure all steelwork meets industry standards and project specifications — from planning right through to final execution."
+    answer: "We conduct rigorous quality control and inspection at every stage to ensure all steelwork meets industry standards and project specifications."
   },
   {
     tags: ['maintenance', 'repair', 'upkeep'],
@@ -65,7 +64,7 @@ const KB = [
   },
   {
     tags: ['demolition', 'dismantling', 'remove structure', 'tear down'],
-    answer: "We offer safe and efficient Demolition and Dismantling of steel structures and industrial facilities. Our team follows strict safety protocols for controlled removal, while maximising material recovery and recycling."
+    answer: "We offer safe and efficient Demolition and Dismantling of steel structures and industrial facilities, following strict safety protocols and maximising material recovery."
   },
   {
     tags: ['design', 'engineering', 'design services'],
@@ -74,10 +73,6 @@ const KB = [
   {
     tags: ['project management', 'manage project', 'project oversight'],
     answer: "We offer comprehensive Project Management services covering all aspects of steelwork projects from inception to completion, ensuring everything runs on time and within budget."
-  },
-  {
-    tags: ['consultation', 'technical support', 'advice', 'expert advice'],
-    answer: "Our team offers expert Consultation and Technical Support to ensure the success of your steelwork and construction projects. Feel free to reach out to info@vlcconstruction.co.za."
   },
   {
     tags: ['location', 'address', 'where are you', 'office', 'head office', 'rustenburg', 'where is vlc'],
@@ -108,14 +103,6 @@ const KB = [
     answer: "Victor Ratshimolo is one of our Site Managers.\n📧 victor@vlcconstruction.co.za\n📞 079 219 3017"
   },
   {
-    tags: ['shivesh', 'supervisor'],
-    answer: "Shivesh is our Supervisor.\n📧 shivesh@vlcconstruction.co.za"
-  },
-  {
-    tags: ['anna', 'admin', 'administration'],
-    answer: "Anna handles Admin Enquiries.\n📧 anna@vlcconstruction.co.za"
-  },
-  {
     tags: ['team', 'staff', 'people', 'who works', 'employees'],
     answer: "Our team includes:\n\n• CEO – Viran Chand\n• Assistant CEO – Quinton Douwie\n• Site Manager – Victor Ratshimolo\n• Supervisor – Shivesh\n• Admin – Anna\n\nVisit our Team page to meet the full team."
   },
@@ -124,84 +111,279 @@ const KB = [
     answer: "We provide free project consultations and quotes! Please visit our Contact page or email info@vlcconstruction.co.za with details of your project. We'll get back to you within 24 hours."
   },
   {
-    tags: ['industries', 'sectors', 'who do you work with', 'clients', 'customers'],
+    tags: ['industries', 'sectors', 'who do you work with', 'clients'],
     answer: "We serve a wide range of industries across South Africa, including:\n\n• Manufacturing\n• Petrochemical\n• Construction\n• Mining"
   },
   {
-    tags: ['south africa', 'nationwide', 'where do you work', 'coverage', 'area'],
+    tags: ['south africa', 'nationwide', 'where do you work', 'coverage'],
     answer: "VLC Construction provides services nationwide across South Africa, with our head office based in Rustenburg, North West."
   },
   {
     tags: ['safety', 'safe', 'safety standards'],
-    answer: "Safety is a top priority at VLC Construction. We adhere to industry-leading safety standards on every project, following strict safety protocols to protect our workers and clients."
+    answer: "Safety is a top priority at VLC Construction. We adhere to industry-leading safety standards on every project, following strict protocols to protect our workers and clients."
   },
   {
-    tags: ['quality', 'ethos', 'values', 'commitment', 'punctuality', 'on time'],
-    answer: "Our ethos is built on quality and punctuality. We employ rigorous quality control from initial planning to final execution, and we meticulously schedule projects to ensure timely delivery — every time."
+    tags: ['quality', 'ethos', 'values', 'commitment', 'punctuality'],
+    answer: "Our ethos is built on quality and punctuality. We employ rigorous quality control from initial planning to final execution, and meticulously schedule projects to ensure timely delivery — every time."
   },
   {
-    tags: ['community', 'charity', 'social', 'csr', 'local'],
-    answer: "Community is at our core. VLC actively participates in charity initiatives, holds regular staff events, supports local suppliers, and hires locally in Rustenburg to give back to our community."
+    tags: ['community', 'charity', 'social', 'local'],
+    answer: "Community is at our core. VLC actively participates in charity initiatives, holds staff events, supports local suppliers, and hires locally in Rustenburg."
   },
   {
-    tags: ['sustainability', 'environment', 'green', 'eco', 'recycling'],
-    answer: "VLC is committed to sustainable practices, including maximising material recovery and recycling during demolition and dismantling work, and implementing eco-conscious construction methods wherever possible."
+    tags: ['thank', 'thanks', 'thank you', 'cheers', 'great', 'helpful'],
+    answer: "You're welcome! Don't hesitate to ask if you have more questions. You can also reach us at info@vlcconstruction.co.za."
   },
   {
-    tags: ['website', 'www', 'web', 'online', 'vlc-construction.com'],
-    answer: "Our website is www.vlc-construction.com — you can find all our services, projects, and contact information there."
-  },
-  {
-    tags: ['thank', 'thanks', 'thank you', 'cheers', 'great', 'awesome', 'helpful'],
-    answer: "You're welcome! Don't hesitate to ask if you have more questions. You can also reach us anytime at info@vlcconstruction.co.za."
-  },
-  {
-    tags: ['bye', 'goodbye', 'see you', 'later', 'take care'],
+    tags: ['bye', 'goodbye', 'see you', 'later'],
     answer: "Goodbye! Feel free to come back anytime. You can also reach us at info@vlcconstruction.co.za or call 083 303 0722."
   },
 ];
 
-const FALLBACK = "I don't have specific information on that. For detailed enquiries, please contact us at info@vlcconstruction.co.za or call 083 303 0722 (Mon–Fri, 08:00–17:00).";
+const FALLBACK = "I don't have specific information on that. For detailed enquiries please contact us at info@vlcconstruction.co.za or call 083 303 0722 (Mon–Fri, 08:00–17:00).";
 
 function getAnswer(input) {
   const q = input.toLowerCase().trim();
-
-  // Score each KB entry by how many of its tags appear in the question
   let best = null;
   let bestScore = 0;
-
   for (const entry of KB) {
     let score = 0;
     for (const tag of entry.tags) {
-      if (q.includes(tag)) {
-        // Longer tag matches score higher (more specific)
-        score += tag.length;
-      }
+      if (q.includes(tag)) score += tag.length;
     }
-    if (score > bestScore) {
-      bestScore = score;
-      best = entry;
-    }
+    if (score > bestScore) { bestScore = score; best = entry; }
   }
-
   return bestScore > 0 ? best.answer : FALLBACK;
 }
 
 // ---------------------------------------------------------------------------
+// Styles (plain objects — no Tailwind, no Framer Motion)
+// ---------------------------------------------------------------------------
+const S = {
+  // Floating button
+  fab: {
+    position: 'fixed',
+    bottom: 20,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: '50%',
+    background: 'linear-gradient(135deg,#1f2d5c 0%,#8b5a2b 60%,#d4b06a 100%)',
+    color: '#fff',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 22,
+    boxShadow: '0 4px 24px rgba(31,45,92,0.5)',
+    zIndex: 2147483647,   // max possible z-index
+    outline: 'none',
+    transition: 'transform 0.15s ease',
+  },
+  // Chat panel
+  panel: {
+    position: 'fixed',
+    bottom: 90,
+    right: 12,
+    left: 12,
+    maxWidth: 370,
+    marginLeft: 'auto',
+    maxHeight: 'calc(100vh - 100px)',
+    zIndex: 2147483646,
+    borderRadius: 20,
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    boxShadow: '0 16px 64px rgba(0,0,0,0.3)',
+    border: '1px solid rgba(255,255,255,0.15)',
+  },
+  // Header
+  header: {
+    background: 'linear-gradient(135deg,#1f2d5c 0%,#8b5a2b 60%,#d4b06a 100%)',
+    color: '#fff',
+    padding: '14px 16px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    flexShrink: 0,
+  },
+  headerIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    background: 'rgba(255,255,255,0.2)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 16,
+    flexShrink: 0,
+  },
+  closeBtn: {
+    marginLeft: 'auto',
+    background: 'rgba(255,255,255,0.15)',
+    border: 'none',
+    borderRadius: 8,
+    color: '#fff',
+    cursor: 'pointer',
+    padding: '6px 8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 14,
+  },
+  // Messages area
+  messages: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '12px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+    background: '#f8f9fb',
+    minHeight: 0,
+  },
+  // Message row
+  msgRowBot: { display: 'flex', gap: 8, alignItems: 'flex-end' },
+  msgRowUser: { display: 'flex', gap: 8, alignItems: 'flex-end', flexDirection: 'row-reverse' },
+  avatar: {
+    width: 28,
+    height: 28,
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 11,
+    flexShrink: 0,
+    color: '#fff',
+  },
+  avatarBot: { background: 'linear-gradient(135deg,#d4b06a,#1f2d5c)' },
+  avatarUser: { background: 'linear-gradient(135deg,#1f2d5c,#8b5a2b)' },
+  bubbleBot: {
+    maxWidth: '78%',
+    background: '#fff',
+    color: '#1a1a2e',
+    borderRadius: '16px 16px 16px 4px',
+    padding: '10px 14px',
+    fontSize: 13,
+    lineHeight: 1.5,
+    whiteSpace: 'pre-line',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
+    border: '1px solid #e8e8ee',
+  },
+  bubbleUser: {
+    maxWidth: '78%',
+    background: 'linear-gradient(135deg,#1f2d5c,#8b5a2b)',
+    color: '#fff',
+    borderRadius: '16px 16px 4px 16px',
+    padding: '10px 14px',
+    fontSize: 13,
+    lineHeight: 1.5,
+    whiteSpace: 'pre-line',
+  },
+  // Typing
+  typingDot: {
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    background: '#1f2d5c',
+    display: 'inline-block',
+  },
+  // Suggestions
+  suggestions: {
+    padding: '8px 12px',
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 6,
+    background: '#f8f9fb',
+    borderTop: '1px solid #e8e8ee',
+    flexShrink: 0,
+  },
+  chip: {
+    padding: '5px 12px',
+    borderRadius: 20,
+    fontSize: 12,
+    fontWeight: 600,
+    border: '1.5px solid #1f2d5c',
+    background: '#fff',
+    color: '#1f2d5c',
+    cursor: 'pointer',
+  },
+  // Input bar
+  inputBar: {
+    display: 'flex',
+    gap: 8,
+    padding: '10px 12px',
+    background: '#fff',
+    borderTop: '1px solid #e8e8ee',
+    flexShrink: 0,
+  },
+  input: {
+    flex: 1,
+    padding: '9px 14px',
+    borderRadius: 20,
+    border: '1.5px solid #d1d5db',
+    fontSize: 13,
+    outline: 'none',
+    background: '#f8f9fb',
+    color: '#111',
+  },
+  sendBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    background: 'linear-gradient(135deg,#1f2d5c,#8b5a2b)',
+    color: '#fff',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 14,
+    flexShrink: 0,
+  },
+  // Tooltip
+  tooltip: {
+    position: 'fixed',
+    bottom: 90,
+    right: 12,
+    zIndex: 2147483646,
+    background: '#fff',
+    color: '#111',
+    fontSize: 13,
+    fontWeight: 600,
+    padding: '10px 16px',
+    borderRadius: '14px 14px 4px 14px',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+    border: '1px solid #e8e8ee',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    whiteSpace: 'nowrap',
+  },
+};
+
+const WELCOME = "👋 Hi! I'm the VLC Construction assistant. Ask me anything about our services, team, location, or how to get a quote.";
+const SUGGESTIONS = ['Our services', 'Get a quote', 'Contact details', 'Office location'];
+
+// ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-const WELCOME = "👋 Hi! I'm the VLC Construction assistant. Ask me anything about our services, team, location, or how to get a quote.";
-
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([{ role: 'bot', content: WELCOME }]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
-  // Show tooltip bubble after 3s, dismiss on open or manual close
   const [showTooltip, setShowTooltip] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
+  // Ensure portal target exists
+  useEffect(() => { setMounted(true); }, []);
+
+  // Auto-show tooltip after 3s
   useEffect(() => {
     const t = setTimeout(() => setShowTooltip(true), 3000);
     return () => clearTimeout(t);
@@ -214,12 +396,12 @@ export default function ChatBot() {
   useEffect(() => {
     if (open) {
       setShowTooltip(false);
-      setTimeout(() => inputRef.current?.focus(), 150);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [open]);
 
-  function handleSend(e) {
-    e.preventDefault();
+  function send(e) {
+    e?.preventDefault();
     const text = input.trim();
     if (!text || typing) return;
     setMessages(prev => [...prev, { role: 'user', content: text }]);
@@ -228,244 +410,131 @@ export default function ChatBot() {
     setTimeout(() => {
       setMessages(prev => [...prev, { role: 'bot', content: getAnswer(text) }]);
       setTyping(false);
-    }, 500 + Math.random() * 400);
+    }, 500 + Math.random() * 300);
   }
 
-  const suggestions = ['Our services', 'Get a quote', 'Contact details', 'Office location'];
-
-  function pickSuggestion(s) {
+  function quickAsk(s) {
     setMessages(prev => [...prev, { role: 'user', content: s }]);
     setTyping(true);
     setTimeout(() => {
       setMessages(prev => [...prev, { role: 'bot', content: getAnswer(s) }]);
       setTyping(false);
-    }, 500);
+    }, 400);
   }
 
   const showSuggestions = messages.length === 1;
 
+  if (!mounted) return null;
+
+  const portalTarget = document.getElementById('chatbot-portal') || document.body;
+
   return createPortal(
     <>
-      {/* ── Chat panel ── */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            key="chat-panel"
-            initial={{ opacity: 0, y: 32, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 32, scale: 0.92 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            style={{
-              position: 'fixed',
-              bottom: 100,
-              right: 12,
-              left: 12,
-              zIndex: 99999,
-              maxWidth: 370,
-              marginLeft: 'auto',
-              maxHeight: 'calc(100vh - 120px)',
-            }}
-            className="flex flex-col rounded-3xl overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/10"
-            role="dialog"
-            aria-label="VLC Construction Chat"
-          >
-            {/* Header — tall branded block */}
-            <div className="relative flex flex-col px-5 pt-5 pb-4 bg-gradient-to-br from-brand via-accent to-gold text-white overflow-hidden flex-shrink-0">
-              {/* Decorative circles */}
-              <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full bg-white/10 pointer-events-none" />
-              <div className="absolute top-8 -right-2 w-14 h-14 rounded-full bg-white/10 pointer-events-none" />
-              <div className="absolute -bottom-4 -left-4 w-20 h-20 rounded-full bg-black/10 pointer-events-none" />
-
-              {/* Top row */}
-              <div className="relative flex items-center gap-3 mb-3">
-                <div className="p-2.5 rounded-2xl bg-white/20 backdrop-blur-sm border border-white/30 shadow-lg">
-                  <FaHardHat className="text-xl text-gold" aria-hidden="true" />
-                </div>
-                <div className="flex-1">
-                  <div className="font-extrabold text-base tracking-wide">VLC Construction</div>
-                  <div className="text-xs font-medium opacity-80 flex items-center gap-1.5">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-400" />
-                    </span>
-                    Assistant · Always online
-                  </div>
-                </div>
-                <button
-                  onClick={() => setOpen(false)}
-                  aria-label="Close chat"
-                  className="p-2 rounded-xl hover:bg-white/20 transition-colors"
-                >
-                  <FaChevronDown aria-hidden="true" />
-                </button>
-              </div>
-
-              {/* Tagline */}
-              <p className="relative text-xs font-medium opacity-90 leading-relaxed">
-                Ask me about services, the team, pricing or anything VLC — I'll help you out instantly.
-              </p>
+      {/* Chat panel */}
+      {open && (
+        <div style={S.panel} role="dialog" aria-label="VLC Construction Chat">
+          {/* Header */}
+          <div style={S.header}>
+            <div style={S.headerIcon}>
+              <FaHardHat />
             </div>
+            <div style={{ flex: 1, lineHeight: 1.3 }}>
+              <div style={{ fontWeight: 800, fontSize: 14 }}>VLC Construction</div>
+              <div style={{ fontSize: 11, opacity: 0.85, display: 'flex', alignItems: 'center', gap: 5 }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                Assistant · Always online
+              </div>
+            </div>
+            <button style={S.closeBtn} onClick={() => setOpen(false)} aria-label="Close chat">
+              <FaChevronDown />
+            </button>
+          </div>
 
-            {/* Messages */}
-            <div
-              className="overflow-y-auto p-4 space-y-3 flex-1 min-h-0 bg-gray-50 dark:bg-dark-page"
-              aria-live="polite"
-            >
-              {messages.map((msg, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className={`flex gap-2 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
-                >
-                  {/* Avatar */}
-                  <div className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center self-end shadow ${
-                    msg.role === 'user'
-                      ? 'bg-gradient-to-br from-brand to-accent text-white'
-                      : 'bg-gradient-to-br from-gold to-brand text-white'
-                  }`}>
-                    {msg.role === 'user'
-                      ? <FaUser className="text-[10px]" aria-hidden="true" />
-                      : <FaHardHat className="text-[10px]" aria-hidden="true" />}
-                  </div>
+          {/* Messages */}
+          <div style={S.messages} aria-live="polite">
+            {messages.map((msg, i) => (
+              <div key={i} style={msg.role === 'bot' ? S.msgRowBot : S.msgRowUser}>
+                <div style={{ ...S.avatar, ...(msg.role === 'bot' ? S.avatarBot : S.avatarUser) }}>
+                  {msg.role === 'bot' ? <FaHardHat /> : <FaUser />}
+                </div>
+                <div style={msg.role === 'bot' ? S.bubbleBot : S.bubbleUser}>
+                  {msg.content}
+                </div>
+              </div>
+            ))}
 
-                  {/* Bubble */}
-                  <div className={`max-w-[78%] px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-line shadow-sm ${
-                    msg.role === 'user'
-                      ? 'bg-gradient-to-br from-brand to-accent text-white rounded-2xl rounded-tr-sm'
-                      : 'bg-white dark:bg-dark-card text-gray-800 dark:text-gray-100 rounded-2xl rounded-tl-sm border border-gray-100 dark:border-white/10'
-                  }`}>
-                    {msg.content}
-                  </div>
-                </motion.div>
+            {typing && (
+              <div style={S.msgRowBot}>
+                <div style={{ ...S.avatar, ...S.avatarBot }}><FaHardHat /></div>
+                <div style={{ ...S.bubbleBot, padding: '12px 16px' }}>
+                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 0ms' }} />
+                  {' '}
+                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 150ms' }} />
+                  {' '}
+                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 300ms' }} />
+                </div>
+              </div>
+            )}
+            <div ref={bottomRef} />
+          </div>
+
+          {/* Quick suggestions */}
+          {showSuggestions && (
+            <div style={S.suggestions}>
+              {SUGGESTIONS.map(s => (
+                <button key={s} style={S.chip} onClick={() => quickAsk(s)}>{s}</button>
               ))}
-
-              {/* Typing dots */}
-              {typing && (
-                <div className="flex gap-2">
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gold to-brand flex items-center justify-center self-end shadow">
-                    <FaHardHat className="text-[10px] text-white" aria-hidden="true" />
-                  </div>
-                  <div className="px-4 py-3 rounded-2xl rounded-tl-sm bg-white dark:bg-dark-card border border-gray-100 dark:border-white/10 shadow-sm flex gap-1.5 items-center">
-                    <span className="w-2 h-2 bg-brand rounded-full animate-bounce [animation-delay:0ms]" />
-                    <span className="w-2 h-2 bg-accent rounded-full animate-bounce [animation-delay:150ms]" />
-                    <span className="w-2 h-2 bg-gold rounded-full animate-bounce [animation-delay:300ms]" />
-                  </div>
-                </div>
-              )}
-
-              <div ref={bottomRef} />
             </div>
+          )}
 
-            {/* Quick suggestions */}
-            {showSuggestions && (
-              <div className="px-4 py-2 bg-gray-50 dark:bg-dark-page border-t border-gray-100 dark:border-white/5 flex flex-wrap gap-2">
-                {suggestions.map(s => (
-                  <button
-                    key={s}
-                    onClick={() => pickSuggestion(s)}
-                    className="px-3 py-1.5 text-xs font-medium rounded-full bg-white dark:bg-dark-card border border-brand/30 dark:border-gold/30 text-brand dark:text-gold hover:bg-gradient-to-r hover:from-brand hover:to-accent hover:text-white hover:border-transparent dark:hover:from-gold dark:hover:to-brand dark:hover:text-white transition-all duration-200 shadow-sm"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Input bar */}
-            <form
-              onSubmit={handleSend}
-              className="flex gap-2 p-3 bg-white dark:bg-dark-card border-t border-gray-100 dark:border-white/10 flex-shrink-0"
-            >
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                placeholder="Type your question…"
-                disabled={typing}
-                className="flex-1 px-4 py-2.5 text-sm rounded-2xl border border-gray-200 dark:border-white/15 bg-gray-50 dark:bg-dark-page text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-brand dark:focus:border-gold focus:bg-white dark:focus:bg-dark-card transition-all disabled:opacity-50"
-                aria-label="Type your question"
-              />
-              <button
-                type="submit"
-                disabled={!input.trim() || typing}
-                aria-label="Send"
-                className="w-11 h-11 flex items-center justify-center rounded-2xl bg-gradient-to-br from-brand to-accent text-white shadow-md hover:shadow-brand/40 hover:scale-105 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
-              >
-                <FaPaperPlane className="text-sm" aria-hidden="true" />
-              </button>
-            </form>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Tooltip bubble ── */}
-      <AnimatePresence>
-        {showTooltip && !open && (
-          <motion.div
-            key="tooltip"
-            initial={{ opacity: 0, x: 12, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 12, scale: 0.9 }}
-            transition={{ duration: 0.25 }}
-            style={{ position: 'fixed', bottom: 88, right: 84, zIndex: 99999 }}
-            className="bg-white dark:bg-dark-card text-gray-800 dark:text-white text-sm font-medium px-4 py-2.5 rounded-2xl rounded-br-sm shadow-xl border border-gray-100 dark:border-white/10 whitespace-nowrap cursor-pointer"
-            onClick={() => { setOpen(true); setShowTooltip(false); }}
-          >
-            💬 Need help? Ask me anything!
+          {/* Input */}
+          <form style={S.inputBar} onSubmit={send}>
+            <input
+              ref={inputRef}
+              style={S.input}
+              type="text"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="Type your question…"
+              disabled={typing}
+              aria-label="Type your question"
+            />
             <button
-              onClick={e => { e.stopPropagation(); setShowTooltip(false); }}
-              className="ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 leading-none"
-              aria-label="Dismiss"
-            >×</button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              type="submit"
+              style={{ ...S.sendBtn, opacity: (!input.trim() || typing) ? 0.4 : 1 }}
+              disabled={!input.trim() || typing}
+              aria-label="Send"
+            >
+              <FaPaperPlane />
+            </button>
+          </form>
+        </div>
+      )}
 
-      {/* ── Floating button ── */}
-      <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 99999, width: 64, height: 64 }}>
-        {/* Pulsing ring */}
-        {!open && (
-          <span
-            aria-hidden="true"
-            style={{
-              position: 'absolute', inset: 0, borderRadius: '9999px',
-              backgroundColor: '#1f2d5c', opacity: 0.25,
-              animation: 'ping 1.5s cubic-bezier(0,0,0.2,1) infinite',
-            }}
-          />
-        )}
-        <motion.button
-          onClick={() => setOpen(o => !o)}
-          aria-label={open ? 'Close chat' : 'Open chat'}
-          aria-expanded={open}
-          style={{
-            position: 'relative', width: 64, height: 64, borderRadius: '9999px',
-            background: 'linear-gradient(135deg, #1f2d5c, #8b5a2b, #d4b06a)',
-            color: '#fff', border: 'none', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 8px 32px rgba(31,45,92,0.45)',
-          }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.93 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-        >
-          <AnimatePresence mode="wait" initial={false}>
-            {open ? (
-              <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
-                <FaTimes style={{ fontSize: 22 }} aria-hidden="true" />
-              </motion.span>
-            ) : (
-              <motion.span key="c" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
-                <FaComments style={{ fontSize: 22 }} aria-hidden="true" />
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </motion.button>
-      </div>
+      {/* Tooltip */}
+      {showTooltip && !open && (
+        <div style={S.tooltip} onClick={() => { setOpen(true); setShowTooltip(false); }}>
+          💬 Need help? Ask me anything!
+          <button
+            onClick={e => { e.stopPropagation(); setShowTooltip(false); }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#999', fontSize: 16, lineHeight: 1, padding: 0 }}
+            aria-label="Dismiss"
+          >×</button>
+        </div>
+      )}
+
+      {/* Floating button */}
+      <button
+        style={S.fab}
+        onClick={() => setOpen(o => !o)}
+        aria-label={open ? 'Close chat' : 'Open chat'}
+        aria-expanded={open}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+      >
+        {open ? <FaTimes /> : <FaComments />}
+      </button>
     </>,
-    document.body
+    portalTarget
   );
 }
