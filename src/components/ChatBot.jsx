@@ -255,7 +255,17 @@ export default function ChatBot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 32, scale: 0.92 }}
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            className="fixed bottom-24 inset-x-2 sm:inset-x-auto sm:right-4 sm:w-[370px] z-[9999] flex flex-col rounded-3xl overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/10 max-h-[calc(100dvh-7rem)]"
+            style={{
+              position: 'fixed',
+              bottom: 100,
+              right: 12,
+              left: 12,
+              zIndex: 99999,
+              maxWidth: 370,
+              marginLeft: 'auto',
+              maxHeight: 'calc(100vh - 120px)',
+            }}
+            className="flex flex-col rounded-3xl overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.3)] border border-white/20 dark:border-white/10"
             role="dialog"
             aria-label="VLC Construction Chat"
           >
@@ -400,7 +410,8 @@ export default function ChatBot() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 12, scale: 0.9 }}
             transition={{ duration: 0.25 }}
-            className="fixed bottom-[88px] right-20 z-[9999] bg-white dark:bg-dark-card text-gray-800 dark:text-white text-sm font-medium px-4 py-2.5 rounded-2xl rounded-br-sm shadow-xl border border-gray-100 dark:border-white/10 whitespace-nowrap cursor-pointer"
+            style={{ position: 'fixed', bottom: 88, right: 84, zIndex: 99999 }}
+            className="bg-white dark:bg-dark-card text-gray-800 dark:text-white text-sm font-medium px-4 py-2.5 rounded-2xl rounded-br-sm shadow-xl border border-gray-100 dark:border-white/10 whitespace-nowrap cursor-pointer"
             onClick={() => { setOpen(true); setShowTooltip(false); }}
           >
             💬 Need help? Ask me anything!
@@ -413,20 +424,30 @@ export default function ChatBot() {
         )}
       </AnimatePresence>
 
-      {/* ── Floating button with pulse ring ── */}
-      <div className="fixed bottom-5 right-5 z-[9999]">
-        {/* Pulsing ring — only visible when closed */}
+      {/* ── Floating button ── */}
+      <div style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 99999, width: 64, height: 64 }}>
+        {/* Pulsing ring */}
         {!open && (
-          <>
-            <span className="absolute inset-0 rounded-full bg-brand opacity-30 animate-ping" />
-            <span className="absolute -inset-1 rounded-full bg-gradient-to-r from-brand to-accent opacity-20 animate-pulse" />
-          </>
+          <span
+            aria-hidden="true"
+            style={{
+              position: 'absolute', inset: 0, borderRadius: '9999px',
+              backgroundColor: '#1f2d5c', opacity: 0.25,
+              animation: 'ping 1.5s cubic-bezier(0,0,0.2,1) infinite',
+            }}
+          />
         )}
         <motion.button
           onClick={() => setOpen(o => !o)}
           aria-label={open ? 'Close chat' : 'Open chat'}
           aria-expanded={open}
-          className="relative w-16 h-16 rounded-full bg-gradient-to-br from-brand via-accent to-gold text-white shadow-2xl shadow-brand/40 flex items-center justify-center"
+          style={{
+            position: 'relative', width: 64, height: 64, borderRadius: '9999px',
+            background: 'linear-gradient(135deg, #1f2d5c, #8b5a2b, #d4b06a)',
+            color: '#fff', border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 8px 32px rgba(31,45,92,0.45)',
+          }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.93 }}
           transition={{ type: 'spring', stiffness: 400, damping: 20 }}
@@ -434,11 +455,11 @@ export default function ChatBot() {
           <AnimatePresence mode="wait" initial={false}>
             {open ? (
               <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
-                <FaTimes className="text-2xl" aria-hidden="true" />
+                <FaTimes style={{ fontSize: 22 }} aria-hidden="true" />
               </motion.span>
             ) : (
               <motion.span key="c" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
-                <FaComments className="text-2xl" aria-hidden="true" />
+                <FaComments style={{ fontSize: 22 }} aria-hidden="true" />
               </motion.span>
             )}
           </AnimatePresence>
