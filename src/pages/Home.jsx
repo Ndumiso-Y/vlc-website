@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { FaHardHat, FaClock, FaHandshake, FaAward } from 'react-icons/fa';
 
 // Let Vite handle asset paths
@@ -50,24 +50,35 @@ const AnimatedCounter = ({ target, suffix = "", duration = 2 }) => {
 };
 
 export default function Home() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <>
       {/* HERO */}
       <section className="relative overflow-hidden group">
-        {/* Background video */}
+        {/* Background video — hidden for users who prefer reduced motion */}
         <div className="absolute inset-0 z-0">
-          <video
-            src={videoUrl}
-            className="w-full h-full object-cover opacity-[0.225] dark:opacity-[0.175]"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="none"
-            poster={coverUrl}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-white/50 dark:bg-[#0b1020]/60"></div>
+          {prefersReducedMotion ? (
+            <img
+              src={coverUrl}
+              alt=""
+              aria-hidden="true"
+              className="w-full h-full object-cover opacity-[0.225] dark:opacity-[0.175]"
+            />
+          ) : (
+            <video
+              src={videoUrl}
+              className="w-full h-full object-cover opacity-[0.225] dark:opacity-[0.175]"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              poster={coverUrl}
+              aria-hidden="true"
+            />
+          )}
+          <div className="absolute inset-0 bg-white/50 dark:bg-dark-page/60"></div>
         </div>
 
         {/* Background blobs */}
@@ -181,7 +192,7 @@ export default function Home() {
       </section>
 
       {/* COMPANY DESCRIPTION - flows naturally */}
-      <section className="py-16 bg-white dark:bg-[#0b1020]">
+      <section className="py-16 bg-white dark:bg-dark-page">
         <div className="container">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -201,7 +212,7 @@ export default function Home() {
       </section>
 
       {/* SHOWCASE SECTION */}
-      <section className="py-16 bg-gray-50 dark:bg-[#0d1324]">
+      <section className="py-16 bg-gray-50 dark:bg-dark-section">
         <div className="container">
           <motion.div
             initial={{ y: 20, opacity: 0 }}

@@ -15,7 +15,7 @@ export default function Footer() {
       <div className="h-1 bg-gradient-to-r from-brand via-accent to-gold" />
       
       {/* Background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-[#0d1324] to-gray-900 dark:from-[#0d1324] dark:via-[#0b1020] dark:to-[#0d1324]"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-dark-section to-gray-900 dark:from-dark-section dark:via-dark-page dark:to-dark-section"></div>
       <div className="absolute -top-32 -right-32 w-64 h-64 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-brand to-accent"></div>
       <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full blur-3xl opacity-15 bg-gradient-to-br from-gold to-brand"></div>
 
@@ -113,6 +113,7 @@ export default function Footer() {
                   allowFullScreen=""
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
+                  sandbox="allow-scripts allow-same-origin allow-popups"
                   className="filter group-hover:contrast-110 transition-all duration-300"
                   title="VLC Construction Location"
                 ></iframe>

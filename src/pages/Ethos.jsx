@@ -27,7 +27,7 @@ export default function Ethos() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100">
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand via-accent to-gold text-white py-20">
@@ -65,7 +65,7 @@ export default function Ethos() {
               transition={{ duration: 0.8 }}
               className="relative group"
             >
-              <div className="bg-white dark:bg-[#0f1426] rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300">
+              <div className="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-brand to-accent text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <FaBullseye className="text-3xl" />
@@ -88,7 +88,7 @@ export default function Ethos() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative group"
             >
-              <div className="bg-white dark:bg-[#0f1426] rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300">
+              <div className="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-accent to-gold text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                     <FaEye className="text-3xl" />
@@ -108,7 +108,7 @@ export default function Ethos() {
       </section>
 
       {/* Core Principles */}
-      <section className="py-20 bg-gray-50 dark:bg-[#0d1324]">
+      <section className="py-20 bg-gray-50 dark:bg-dark-section">
         <div className="container">
           <motion.div
             initial={{ y: 30, opacity: 0 }}
@@ -137,7 +137,7 @@ export default function Ethos() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group relative"
               >
-                <div className="bg-white dark:bg-[#0f1426] rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300 hover:scale-105">
+                <div className="bg-white dark:bg-dark-card rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300 hover:scale-105">
                   <div className="flex items-start gap-4">
                     <div className={`p-3 rounded-xl bg-gradient-to-r ${principle.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                       <principle.icon className="text-2xl" />

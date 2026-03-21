@@ -1,19 +1,22 @@
 // src/App.jsx
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 
-// Pages
-import Home from "./pages/Home.jsx";
-import About from "./pages/About.jsx";
-import Services from "./pages/Services.jsx";
-import Projects from "./pages/Projects.jsx";
-import Ethos from "./pages/Ethos.jsx";
-import Team from "./pages/Team.jsx";
-import Contact from "./pages/Contact.jsx";
+// Pages — lazy loaded per route to reduce initial bundle size
+const Home     = lazy(() => import("./pages/Home.jsx"));
+const About    = lazy(() => import("./pages/About.jsx"));
+const Services = lazy(() => import("./pages/Services.jsx"));
+const Projects = lazy(() => import("./pages/Projects.jsx"));
+const Ethos    = lazy(() => import("./pages/Ethos.jsx"));
+const Team     = lazy(() => import("./pages/Team.jsx"));
+const Contact  = lazy(() => import("./pages/Contact.jsx"));
+const Privacy  = lazy(() => import("./pages/Privacy.jsx"));
+const Terms    = lazy(() => import("./pages/Terms.jsx"));
+const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
 export default function App() {
   // Theme state (persist + light mode default)
@@ -32,22 +35,28 @@ export default function App() {
 
   return (
     // Flex column so footer always renders and sticks to bottom on short pages
-    <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100 flex flex-col">
+    <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100 flex flex-col">
       <ScrollToTop />
       <Navbar dark={dark} setDark={setDark} />
       <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/ethos" element={<Ethos />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/contact" element={<Contact />} />
-          {/* Footer link placeholders */}
-          <Route path="/privacy" element={<div className="container py-16">Privacy policy coming soon.</div>} />
-          <Route path="/terms" element={<div className="container py-16">Terms of service coming soon.</div>} />
-        </Routes>
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="w-10 h-10 rounded-full border-4 border-brand border-t-transparent animate-spin" aria-label="Loading page" />
+          </div>
+        }>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/ethos" element={<Ethos />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
       </main>
       <Footer />
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { 
   FaShieldAlt, 
   FaBalanceScale, 
@@ -22,24 +22,28 @@ const aboutVideoUrl = new URL('../assets/3968723-hd_1920_1080_24fps.mp4', import
 const constructionWorkerImg = new URL('../assets/image.png', import.meta.url).href;
 
 export default function About() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100">
-      
+    <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100">
+
       {/* Hero Section with Video Background */}
       <section className="relative overflow-hidden h-[70vh] flex items-center justify-center">
-        {/* Background Video */}
+        {/* Background Video — hidden for users who prefer reduced motion */}
         <div className="absolute inset-0 z-0">
-          <video
-            src={aboutVideoUrl}
-            className="w-full h-full object-cover opacity-30 dark:opacity-20"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="none"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-brand/80 via-accent/60 to-gold/80 dark:from-[#0b1020]/70 dark:via-brand/50 dark:to-accent/60"></div>
+          {!prefersReducedMotion && (
+            <video
+              src={aboutVideoUrl}
+              className="w-full h-full object-cover opacity-30 dark:opacity-20"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="none"
+              aria-hidden="true"
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-br from-brand/80 via-accent/60 to-gold/80 dark:from-dark-page/70 dark:via-brand/50 dark:to-accent/60"></div>
         </div>
 
         {/* Content */}
@@ -66,7 +70,7 @@ export default function About() {
       </section>
 
       {/* What Sets Us Apart */}
-      <section className="py-20 bg-gray-50 dark:bg-[#0d1324]">
+      <section className="py-20 bg-gray-50 dark:bg-dark-section">
         <div className="container">
           <motion.div
             initial={{ y: 30, opacity: 0 }}
@@ -175,7 +179,7 @@ export default function About() {
       </section>
 
       {/* Community Values */}
-      <section className="py-20 bg-white dark:bg-[#0b1020]">
+      <section className="py-20 bg-white dark:bg-dark-page">
         <div className="container">
           <motion.div
             initial={{ y: 30, opacity: 0 }}
@@ -218,7 +222,7 @@ export default function About() {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#0f1426] border border-gray-200 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-300"
+                className="group relative overflow-hidden rounded-2xl bg-white dark:bg-dark-card border border-gray-200 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-300"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative z-10">
@@ -235,7 +239,7 @@ export default function About() {
       </section>
 
       {/* Quality & Punctuality Ethos */}
-      <section className="py-20 bg-gray-50 dark:bg-[#0d1324] relative overflow-hidden">
+      <section className="py-20 bg-gray-50 dark:bg-dark-section relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute top-10 right-10 w-64 h-64 rounded-full blur-3xl opacity-20 bg-gradient-to-br from-brand to-accent"></div>
         <div className="absolute bottom-10 left-10 w-48 h-48 rounded-full blur-3xl opacity-15 bg-gradient-to-br from-gold to-brand"></div>
@@ -266,7 +270,7 @@ export default function About() {
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
-              <div className="bg-white/80 dark:bg-[#0f1426]/80 rounded-3xl p-8 border border-gray-200/50 dark:border-white/10">
+              <div className="bg-white/80 dark:bg-dark-card/80 rounded-3xl p-8 border border-gray-200/50 dark:border-white/10">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 rounded-xl bg-brand/10 border border-brand/20">
                     <FaAward className="text-2xl text-brand dark:text-gold" />
@@ -281,7 +285,7 @@ export default function About() {
                 </p>
               </div>
 
-              <div className="bg-white/80 dark:bg-[#0f1426]/80 rounded-3xl p-8 border border-gray-200/50 dark:border-white/10">
+              <div className="bg-white/80 dark:bg-dark-card/80 rounded-3xl p-8 border border-gray-200/50 dark:border-white/10">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 rounded-xl bg-accent/10 border border-accent/20">
                     <FaClock className="text-2xl text-accent dark:text-gold" />

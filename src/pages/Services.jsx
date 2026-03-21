@@ -146,7 +146,7 @@ export default function Services() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100">
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand via-accent to-gold text-white py-20">
@@ -182,7 +182,7 @@ export default function Services() {
       </section>
 
       {/* Tab Navigation */}
-      <section className="py-8 bg-gray-50 dark:bg-[#0d1324] border-b border-gray-200 dark:border-white/10">
+      <section className="py-8 bg-gray-50 dark:bg-dark-section border-b border-gray-200 dark:border-white/10">
         <div className="container">
           {/* Instructions for clarity */}
           <div className="text-center mb-6">
@@ -192,7 +192,7 @@ export default function Services() {
           </div>
           
           <div className="flex justify-center">
-            <div className="bg-white dark:bg-[#0f1426] rounded-2xl p-2 shadow-lg border border-gray-200 dark:border-white/10">
+            <div className="bg-white dark:bg-dark-card rounded-2xl p-2 shadow-lg border border-gray-200 dark:border-white/10">
               <button
                 onClick={() => setActiveTab('products')}
                 className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 transform ${
@@ -265,7 +265,7 @@ export default function Services() {
                   whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
-                  className="bg-white dark:bg-[#0f1426] rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10"
+                  className="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10"
                 >
                   <div className="flex items-center gap-4 mb-6">
                     <div className={`p-4 rounded-2xl bg-gradient-to-br ${product.color} text-white shadow-lg`}>
@@ -282,7 +282,7 @@ export default function Services() {
                   
                   <div className="grid sm:grid-cols-2 gap-3">
                     {product.features.map((feature, idx) => (
-                      <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-[#0d1324] border border-gray-200 dark:border-white/10">
+                      <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 dark:bg-dark-section border border-gray-200 dark:border-white/10">
                         <FaCheckCircle className="text-brand dark:text-gold flex-shrink-0" />
                         <span className="text-sm font-medium">{feature}</span>
                       </div>
@@ -345,7 +345,7 @@ export default function Services() {
 
       {/* Services Section */}
       {activeTab === 'services' && (
-        <section className="py-20 bg-gray-50 dark:bg-[#0d1324]">
+        <section className="py-20 bg-gray-50 dark:bg-dark-section">
           <div className="container">
             <motion.div
               initial={{ y: 30, opacity: 0 }}
@@ -372,7 +372,7 @@ export default function Services() {
                   whileInView={{ y: 0, opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group relative overflow-hidden rounded-2xl bg-white dark:bg-[#0f1426] border border-gray-200 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-300"
+                  className="group relative overflow-hidden rounded-2xl bg-white dark:bg-dark-card border border-gray-200 dark:border-white/10 p-8 hover:shadow-2xl transition-all duration-300"
                 >
                   <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-brand/10 to-accent/10 rounded-bl-3xl"></div>
                   
@@ -397,7 +397,7 @@ export default function Services() {
       )}
 
       {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-[#0d1324] to-gray-900 text-white relative overflow-hidden">
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-dark-section to-gray-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-brand/20 via-accent/20 to-gold/20"></div>
         <div className="absolute top-10 right-10 w-64 h-64 rounded-full blur-3xl opacity-20 bg-gold"></div>
         <div className="absolute bottom-10 left-10 w-48 h-48 rounded-full blur-3xl opacity-15 bg-brand"></div>

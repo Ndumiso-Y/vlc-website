@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { 
@@ -32,6 +32,9 @@ const installationWorkImg = new URL("../assets/Installation.png", import.meta.ur
 export default function Projects() {
   const [openIndex, setOpenIndex] = useState(null);
   const [animIn, setAnimIn] = useState(false);
+  const modalRef = useRef(null);
+  const closeBtnRef = useRef(null);
+  const triggerRef = useRef(null); // stores the button that opened the modal
 
   const projects = useMemo(
     () => [
@@ -57,28 +60,57 @@ export default function Projects() {
     []
   );
 
-  const openModal = (idx) => {
+  const openModal = (idx, triggerEl) => {
+    triggerRef.current = triggerEl;
     setOpenIndex(idx);
-    requestAnimationFrame(() => setAnimIn(true));
+    requestAnimationFrame(() => {
+      setAnimIn(true);
+      // Move focus into modal after paint
+      requestAnimationFrame(() => closeBtnRef.current?.focus());
+    });
   };
 
   const closeModal = useCallback(() => {
     setAnimIn(false);
     const timeout = setTimeout(() => {
       setOpenIndex(null);
+      // Restore focus to the card button that opened the modal
+      triggerRef.current?.focus();
+      triggerRef.current = null;
     }, 250);
     return () => clearTimeout(timeout);
   }, []);
 
+  // Keyboard: Escape + Arrow navigation + focus trap (Tab)
   useEffect(() => {
     if (openIndex === null) return;
     const onKey = (e) => {
-      if (e.key === "Escape") closeModal();
+      if (e.key === "Escape") { closeModal(); return; }
       if (e.key === "ArrowRight") {
         setOpenIndex((prev) => (prev + 1) % projects.length);
+        requestAnimationFrame(() => closeBtnRef.current?.focus());
+        return;
       }
       if (e.key === "ArrowLeft") {
         setOpenIndex((prev) => (prev - 1 + projects.length) % projects.length);
+        requestAnimationFrame(() => closeBtnRef.current?.focus());
+        return;
+      }
+      // Focus trap: keep Tab inside the modal
+      if (e.key === "Tab" && modalRef.current) {
+        const focusable = Array.from(
+          modalRef.current.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => !el.disabled);
+        if (focusable.length === 0) { e.preventDefault(); return; }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
       }
     };
     window.addEventListener("keydown", onKey);
@@ -86,7 +118,7 @@ export default function Projects() {
   }, [openIndex, closeModal, projects.length]);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100">
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand via-accent to-gold text-white py-20">
@@ -136,12 +168,12 @@ export default function Projects() {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="group bg-white dark:bg-[#0f1426] rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-white/10"
+                className="group bg-white dark:bg-dark-card rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-white/10"
               >
                 {/* Project Image */}
                 <div className="relative overflow-hidden">
                   <button
-                    onClick={() => openModal(index)}
+                    onClick={(e) => openModal(index, e.currentTarget)}
                     className="w-full h-64 overflow-hidden focus:outline-none focus:ring-2 focus:ring-brand group-hover:scale-105 transition-transform duration-500"
                     aria-label={`View ${project.title} details`}
                   >
@@ -178,8 +210,10 @@ export default function Projects() {
       {/* Lightbox Modal */}
       {openIndex !== null && (
         <div
+          ref={modalRef}
           role="dialog"
           aria-modal="true"
+          aria-label={projects[openIndex]?.title}
           className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-200 ${
             animIn ? "bg-black/80 opacity-100" : "bg-black/0 opacity-0"
           }`}
@@ -192,6 +226,7 @@ export default function Projects() {
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              ref={closeBtnRef}
               onClick={closeModal}
               className="absolute -top-10 right-0 text-white/90 hover:text-white focus:outline-none focus:ring-2 focus:ring-white rounded-full p-2"
               aria-label="Close image modal"

@@ -28,7 +28,7 @@ export default function Navbar({ dark, setDark }) {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-white/85 dark:bg-[#0d1324]/80 backdrop-blur border-b border-gray-200 dark:border-white/10">
+      <header className="sticky top-0 z-40 bg-white/85 dark:bg-dark-section/80 backdrop-blur border-b border-gray-200 dark:border-white/10">
         <div className="container flex items-center justify-between py-3">
           <Link to="/" className="flex items-center gap-3">
             <img
@@ -99,7 +99,7 @@ export default function Navbar({ dark, setDark }) {
           role="dialog"
         >
           <div
-            className="ml-auto h-full w-[85%] max-w-sm bg-white dark:bg-[#0d1324] shadow-xl border-l border-gray-200 dark:border-white/10 p-5 flex flex-col"
+            className="ml-auto h-full w-[85%] max-w-sm bg-white dark:bg-dark-section shadow-xl border-l border-gray-200 dark:border-white/10 p-5 flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">

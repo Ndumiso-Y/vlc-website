@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaGlobe, FaPaperPlane, FaClock, FaUser, FaComment } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaGlobe, FaPaperPlane, FaClock, FaUser, FaComment, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+
+// Replace YOUR_WEB3FORMS_KEY with your actual access key from web3forms.com
+// Sign up free at https://web3forms.com → Enter your email → copy the Access Key
+const WEB3FORMS_KEY = '9ec60c0a-daa0-45e2-a4ac-0ccbc79da699';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -10,14 +14,38 @@ export default function Contact() {
     phone: '',
     message: ''
   });
+  const [status, setStatus] = useState('idle'); // idle | sending | success | error
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setStatus('sending');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: 'New Enquiry — VLC Construction Website',
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus('success');
+        setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
   };
 
   const emails = [
@@ -36,7 +64,7 @@ export default function Contact() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100">
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand via-accent to-gold text-white py-20">
@@ -97,7 +125,7 @@ export default function Contact() {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-dark-card text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
                       placeholder="First name"
                       required
                     />
@@ -112,7 +140,7 @@ export default function Contact() {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-dark-card text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
                       placeholder="Last name"
                       required
                     />
@@ -129,7 +157,7 @@ export default function Contact() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-dark-card text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
                     placeholder="Email address"
                     required
                   />
@@ -145,7 +173,7 @@ export default function Contact() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-dark-card text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors"
                     placeholder="Phone number"
                     required
                   />
@@ -161,19 +189,42 @@ export default function Contact() {
                     value={formData.message}
                     onChange={handleChange}
                     rows={5}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-[#0f1426] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors resize-none"
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-white/20 bg-white dark:bg-dark-card text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-brand focus:outline-none transition-colors resize-none"
                     placeholder="Tell us about your project..."
                     required
                   />
                 </div>
 
+                {/* Success banner */}
+                {status === 'success' && (
+                  <div role="alert" className="flex items-center gap-3 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 text-green-800 dark:text-green-300">
+                    <FaCheckCircle className="flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <p className="text-sm font-medium">Message sent! We'll get back to you within 24 hours.</p>
+                  </div>
+                )}
+
+                {/* Error banner */}
+                {status === 'error' && (
+                  <div role="alert" className="flex items-center gap-3 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-800 dark:text-red-300">
+                    <FaExclamationCircle className="flex-shrink-0 text-red-600 dark:text-red-400" />
+                    <p className="text-sm font-medium">Something went wrong. Please try again or email us directly at <a href="mailto:info@vlcconstruction.co.za" className="underline">info@vlcconstruction.co.za</a>.</p>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-brand to-accent text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                  disabled={status === 'sending' || status === 'success'}
+                  className="w-full inline-flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-brand to-accent text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <FaPaperPlane />
-                  Send Message
+                  {status === 'sending' ? 'Sending…' : status === 'success' ? 'Message Sent' : 'Send Message'}
                 </button>
+
+                {/* POPIA consent statement */}
+                <p className="text-xs text-gray-500 dark:text-gray-400 text-center leading-relaxed">
+                  By submitting this form you consent to VLC Construction processing your personal information to respond to your enquiry, in accordance with our{' '}
+                  <a href="/privacy" className="underline hover:text-brand dark:hover:text-gold transition-colors">Privacy Policy</a>.
+                </p>
               </form>
             </motion.div>
 
@@ -186,7 +237,7 @@ export default function Contact() {
               className="space-y-8"
             >
               {/* Office Location */}
-              <div className="bg-white dark:bg-[#0f1426] rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
+              <div className="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-brand to-accent text-white shadow-lg">
                     <FaMapMarkerAlt className="text-2xl" />
@@ -212,7 +263,7 @@ export default function Contact() {
               </div>
 
               {/* Email Contacts */}
-              <div className="bg-white dark:bg-[#0f1426] rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
+              <div className="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Email Contacts</h3>
                 <div className="space-y-4">
                   {emails.map((email, index) => (
@@ -242,7 +293,7 @@ export default function Contact() {
               </div>
 
               {/* Phone Contacts */}
-              <div className="bg-white dark:bg-[#0f1426] rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
+              <div className="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Phone Contacts</h3>
                 <div className="space-y-4">
                   {phones.map((phone, index) => (
@@ -272,7 +323,7 @@ export default function Contact() {
               </div>
 
               {/* Website */}
-              <div className="bg-white dark:bg-[#0f1426] rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
+              <div className="bg-white dark:bg-dark-card rounded-3xl p-8 shadow-xl border border-gray-200 dark:border-white/10">
                 <div className="flex items-center gap-4">
                   <div className="p-4 rounded-2xl bg-gradient-to-r from-gold to-brand text-white shadow-lg">
                     <FaGlobe className="text-2xl" />

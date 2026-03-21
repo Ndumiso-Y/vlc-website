@@ -19,7 +19,7 @@ export default function Team() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0b1020] text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100">
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand via-accent to-gold text-white py-20">
@@ -72,7 +72,7 @@ export default function Team() {
                 whileInView={{ y: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="group bg-white dark:bg-[#0f1426] rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="group bg-white dark:bg-dark-card rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-white/10 hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 <div className="text-center">
                   <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${person.color} text-white shadow-lg mb-4 group-hover:scale-110 transition-transform duration-300`}>
