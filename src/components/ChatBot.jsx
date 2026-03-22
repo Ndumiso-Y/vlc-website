@@ -494,6 +494,16 @@ export default function ChatBot() {
 
   return createPortal(
     <>
+      <style>{`
+        @keyframes vlc-bounce {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(-4px); }
+        }
+        .vlc-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#1f2d5c; }
+        .vlc-dot-1 { animation: vlc-bounce 1s infinite 0ms; }
+        .vlc-dot-2 { animation: vlc-bounce 1s infinite 150ms; }
+        .vlc-dot-3 { animation: vlc-bounce 1s infinite 300ms; }
+      `}</style>
       {/* Chat panel */}
       {open && (
         <div style={S.panel} role="dialog" aria-label="VLC Construction Chat">
@@ -523,10 +533,10 @@ export default function ChatBot() {
             {typing && (
               <div style={S.msgRowBot}>
                 <div style={{ ...S.avatar, ...S.avatarBot }}><FaHardHat /></div>
-                <div style={{ ...S.bubbleBot, padding: '12px 16px' }}>
-                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 0ms' }} />{' '}
-                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 150ms' }} />{' '}
-                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 300ms' }} />
+                <div style={{ ...S.bubbleBot, padding: '12px 16px', display: 'flex', gap: 5, alignItems: 'center' }}>
+                  <span className="vlc-dot vlc-dot-1" />
+                  <span className="vlc-dot vlc-dot-2" />
+                  <span className="vlc-dot vlc-dot-3" />
                 </div>
               </div>
             )}

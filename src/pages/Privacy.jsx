@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 export default function Privacy() {
-  const lastUpdated = "21 March 2026";
+  const lastUpdated = "22 March 2026";
 
   return (
     <div className="min-h-screen bg-white dark:bg-dark-page text-gray-900 dark:text-gray-100">
@@ -90,7 +90,7 @@ export default function Privacy() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">5. How We Store and Protect Your Information</h2>
               <p>
-                Contact form submissions are processed through Formspree, a secure third-party form handling
+                Contact form submissions are processed through Web3Forms, a secure third-party form handling
                 service. Your information is transmitted over HTTPS and stored securely. We retain contact
                 enquiry data for a maximum of 12 months, after which it is deleted unless a business
                 relationship has been established.
@@ -105,7 +105,7 @@ export default function Privacy() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">6. Sharing Your Information</h2>
               <p>We do not sell or trade your personal information. We may share it only with:</p>
               <ul className="list-disc list-inside mt-3 space-y-1">
-                <li><strong>Formspree</strong> — our form processing service provider, who processes data on our behalf and is bound by their own privacy policy.</li>
+                <li><strong>Web3Forms</strong> — our form processing service provider, who processes data on our behalf and is bound by their own privacy policy.</li>
                 <li><strong>Legal authorities</strong> — where required by South African law or a court order.</li>
               </ul>
             </div>

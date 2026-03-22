@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaMapMarkerAlt, FaEnvelope, FaPhoneAlt, FaGlobe, FaPaperPlane, FaClock, FaUser, FaComment, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
-// Replace YOUR_WEB3FORMS_KEY with your actual access key from web3forms.com
-// Sign up free at https://web3forms.com → Enter your email → copy the Access Key
-const WEB3FORMS_KEY = '9ec60c0a-daa0-45e2-a4ac-0ccbc79da699';
+const WEB3FORMS_KEY = import.meta.env.VITE_WEB3FORMS_KEY;
 
 export default function Contact() {
   const [formData, setFormData] = useState({
