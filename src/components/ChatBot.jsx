@@ -366,6 +366,7 @@ const S = {
 
 const WELCOME = "👋 Hi! I'm the VLC Construction assistant. Ask me anything about our services, team, location, or how to get a quote.";
 const SUGGESTIONS = ['Our services', 'Get a quote', 'Contact details', 'Office location'];
+const DISMISSED_KEY = 'vlc_chat_dismissed';
 
 // ---------------------------------------------------------------------------
 // Component
@@ -377,13 +378,22 @@ export default function ChatBot() {
   const [typing, setTyping] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [overZone, setOverZone] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const dragStartPos = useRef(null);
+  const hasDragged = useRef(false);
+  const dismissZoneRef = useRef(null);
 
-  // Ensure portal target exists
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+    try {
+      if (sessionStorage.getItem(DISMISSED_KEY) === '1') setDismissed(true);
+    } catch {}
+  }, []);
 
-  // Auto-show tooltip after 3s
   useEffect(() => {
     const t = setTimeout(() => setShowTooltip(true), 3000);
     return () => clearTimeout(t);
@@ -399,6 +409,60 @@ export default function ChatBot() {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [open]);
+
+  // ── Drag-to-dismiss ──────────────────────────────────────────────────────
+  function onPointerDown(e) {
+    // Only start drag tracking if chat is closed
+    if (open) return;
+    dragStartPos.current = { x: e.clientX, y: e.clientY };
+    hasDragged.current = false;
+
+    function onPointerMove(ev) {
+      if (!dragStartPos.current) return;
+      const dx = ev.clientX - dragStartPos.current.x;
+      const dy = ev.clientY - dragStartPos.current.y;
+      if (Math.sqrt(dx * dx + dy * dy) > 15) {
+        hasDragged.current = true;
+        setDragging(true);
+        // Check if pointer is over dismiss zone
+        if (dismissZoneRef.current) {
+          const r = dismissZoneRef.current.getBoundingClientRect();
+          setOverZone(
+            ev.clientX >= r.left && ev.clientX <= r.right &&
+            ev.clientY >= r.top  && ev.clientY <= r.bottom
+          );
+        }
+      }
+    }
+
+    function onPointerUp(ev) {
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+
+      if (hasDragged.current && dismissZoneRef.current) {
+        const r = dismissZoneRef.current.getBoundingClientRect();
+        const onTarget =
+          ev.clientX >= r.left && ev.clientX <= r.right &&
+          ev.clientY >= r.top  && ev.clientY <= r.bottom;
+        if (onTarget) {
+          try { sessionStorage.setItem(DISMISSED_KEY, '1'); } catch {}
+          setDismissed(true);
+        }
+      }
+      setDragging(false);
+      setOverZone(false);
+      dragStartPos.current = null;
+    }
+
+    document.addEventListener('pointermove', onPointerMove);
+    document.addEventListener('pointerup', onPointerUp);
+  }
+
+  function handleFabClick() {
+    if (hasDragged.current) return; // suppress click after drag
+    setOpen(o => !o);
+  }
+  // ─────────────────────────────────────────────────────────────────────────
 
   function send(e) {
     e?.preventDefault();
@@ -424,7 +488,7 @@ export default function ChatBot() {
 
   const showSuggestions = messages.length === 1;
 
-  if (!mounted) return null;
+  if (!mounted || dismissed) return null;
 
   const portalTarget = document.getElementById('chatbot-portal') || document.body;
 
@@ -433,11 +497,8 @@ export default function ChatBot() {
       {/* Chat panel */}
       {open && (
         <div style={S.panel} role="dialog" aria-label="VLC Construction Chat">
-          {/* Header */}
           <div style={S.header}>
-            <div style={S.headerIcon}>
-              <FaHardHat />
-            </div>
+            <div style={S.headerIcon}><FaHardHat /></div>
             <div style={{ flex: 1, lineHeight: 1.3 }}>
               <div style={{ fontWeight: 800, fontSize: 14 }}>VLC Construction</div>
               <div style={{ fontSize: 11, opacity: 0.85, display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -450,27 +511,21 @@ export default function ChatBot() {
             </button>
           </div>
 
-          {/* Messages */}
           <div style={S.messages} aria-live="polite">
             {messages.map((msg, i) => (
               <div key={i} style={msg.role === 'bot' ? S.msgRowBot : S.msgRowUser}>
                 <div style={{ ...S.avatar, ...(msg.role === 'bot' ? S.avatarBot : S.avatarUser) }}>
                   {msg.role === 'bot' ? <FaHardHat /> : <FaUser />}
                 </div>
-                <div style={msg.role === 'bot' ? S.bubbleBot : S.bubbleUser}>
-                  {msg.content}
-                </div>
+                <div style={msg.role === 'bot' ? S.bubbleBot : S.bubbleUser}>{msg.content}</div>
               </div>
             ))}
-
             {typing && (
               <div style={S.msgRowBot}>
                 <div style={{ ...S.avatar, ...S.avatarBot }}><FaHardHat /></div>
                 <div style={{ ...S.bubbleBot, padding: '12px 16px' }}>
-                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 0ms' }} />
-                  {' '}
-                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 150ms' }} />
-                  {' '}
+                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 0ms' }} />{' '}
+                  <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 150ms' }} />{' '}
                   <span style={{ ...S.typingDot, animation: 'bounce 1s infinite 300ms' }} />
                 </div>
               </div>
@@ -478,7 +533,6 @@ export default function ChatBot() {
             <div ref={bottomRef} />
           </div>
 
-          {/* Quick suggestions */}
           {showSuggestions && (
             <div style={S.suggestions}>
               {SUGGESTIONS.map(s => (
@@ -487,7 +541,6 @@ export default function ChatBot() {
             </div>
           )}
 
-          {/* Input */}
           <form style={S.inputBar} onSubmit={send}>
             <input
               ref={inputRef}
@@ -512,7 +565,7 @@ export default function ChatBot() {
       )}
 
       {/* Tooltip */}
-      {showTooltip && !open && (
+      {showTooltip && !open && !dragging && (
         <div style={S.tooltip} onClick={() => { setOpen(true); setShowTooltip(false); }}>
           💬 Need help? Ask me anything!
           <button
@@ -523,14 +576,50 @@ export default function ChatBot() {
         </div>
       )}
 
+      {/* Drag dismiss zone — appears while dragging */}
+      {dragging && (
+        <div
+          ref={dismissZoneRef}
+          style={{
+            position: 'fixed',
+            bottom: 100,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 2147483645,
+            background: overZone ? '#ef4444' : '#fff0f0',
+            border: '2px dashed #ef4444',
+            borderRadius: 30,
+            padding: '12px 28px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            fontSize: 13,
+            fontWeight: 700,
+            color: overZone ? '#fff' : '#ef4444',
+            pointerEvents: 'none',
+            transition: 'all 0.15s',
+            whiteSpace: 'nowrap',
+            boxShadow: '0 4px 20px rgba(239,68,68,0.25)',
+          }}
+        >
+          🗑️ {overZone ? 'Release to remove' : 'Drag here to remove'}
+        </div>
+      )}
+
       {/* Floating button */}
       <button
-        style={S.fab}
-        onClick={() => setOpen(o => !o)}
-        aria-label={open ? 'Close chat' : 'Open chat'}
+        style={{
+          ...S.fab,
+          transform: dragging ? 'scale(0.9)' : 'scale(1)',
+          opacity: dragging ? 0.7 : 1,
+          touchAction: 'none',
+          userSelect: 'none',
+        }}
+        onPointerDown={onPointerDown}
+        onClick={handleFabClick}
+        aria-label={open ? 'Close chat' : 'Open chat — drag to dismiss'}
         aria-expanded={open}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+        title="Drag to remove"
       >
         {open ? <FaTimes /> : <FaComments />}
       </button>
