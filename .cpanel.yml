@@ -1,0 +1,8 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html/
+    - /bin/cp -R assets $DEPLOYPATH
+    - /bin/cp *.html *.png *.txt *.xml $DEPLOYPATH
+    - touch $DEPLOYPATH/.htaccess
+    - grep -q "BEGIN VLC-SPA" $DEPLOYPATH/.htaccess || cat .htaccess-spa >> $DEPLOYPATH/.htaccess
